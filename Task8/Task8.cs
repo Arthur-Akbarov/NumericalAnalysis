@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using static System.Math;
 using static System.Console;
+using static System.Math;
 using static System.String;
 
 namespace NumericalAnalysis
@@ -14,7 +14,7 @@ namespace NumericalAnalysis
 		{
 			do
 				Start();
-			while (ReadKey().Key != ConsoleKey.F4);
+			while (ReadKey().Key != ConsoleKey.Q);
 		}
 		static void Start(int idEquation = 0)
 		{
@@ -34,7 +34,7 @@ namespace NumericalAnalysis
 			Output(yy);
 		}
 
-		static G GetSolution(int idEquation)
+		static Func<double, double> GetSolution(int idEquation)
 		{
 			if (idEquation == 0)
 			{
@@ -197,17 +197,16 @@ namespace NumericalAnalysis
 			Gnuplot.Run(x, x, functions, title, "x", y0, y1);
 		}
 
-		static F f;
-		static G Y;
+		static Func<double, double, double> f;
+		static Func<double, double> Y;
 		static int n;
 		static double a, b, h, y0;
 		static double[] x;
 		static string solution;
-		delegate double G(double x);
-		delegate double F(double x, double y);
 		static readonly List<Method> Methods = new List<Method> {
 			Euler, ModifiedEuler, Trapezoidal, RungeKutta, Adams };
 		static double[][] yy = new double[Methods.Count][];
 	}
 }
+// problem condition
 // http://an-site.ru/kr/km2.htm

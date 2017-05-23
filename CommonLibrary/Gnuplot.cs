@@ -1,8 +1,9 @@
-﻿using static System.String;
+﻿using System;
+using System.IO;
 
 namespace NumericalAnalysis
 {
-	public class Gnuplot
+	public static class Gnuplot
 	{
 		static void SetWindow(string title)
 		{
@@ -23,10 +24,12 @@ namespace NumericalAnalysis
 			for (int i = 1; i < x.Length - 1; i++)
 				S("set label '{0}_{{{1}}}' at {2} offset 0,-1 "
 					+ "point pointtype 7", arrayName, i, x[i]);
+
 			if (x[0] == a)
 			{
 				S("set label 'a = {0}_{{{1}}}' at {2} offset -3,-1 " +
 					"point pointtype 7", arrayName, 0, a);
+
 				S("set label 'b = {0}_{{{1}}}' at {2} offset -3,-1 " +
 					"point pointtype 7", arrayName, x.Length - 1, b);
 			}
@@ -35,6 +38,7 @@ namespace NumericalAnalysis
 				for (int i = 0; i < x.Length; i += x.Length - 1)
 					S("set label '{0}_{{{1}}}' at {2} offset 0,-1 "
 						+ "point pointtype 7", arrayName, i, x[i]);
+
 				S("set label 'a' at {0} offset -2.5,-1 point pointtype 7", a);
 				S("set label 'b' at {0} offset 0,-1 point pointtype 7", b);
 			}
@@ -54,10 +58,9 @@ namespace NumericalAnalysis
 		public static void Run(double[] x, double[] xx, string functions,
 			double[] z, string title, string arrayName, params double[][] y)
 		{
-			using (var file = new System.IO.StreamWriter("gnuplotRun.txt"))
+			using (var file = new StreamWriter(script))
 			{
-				S = (string s, object[] args) =>
-					file.WriteLine(Format(s, args));
+				S = (s, args) => file.WriteLine(string.Format(s, args));
 
 				SetWindow(title);
 				SetLabels(x, arrayName, z[0], z[z.Length - 1]);
@@ -66,23 +69,39 @@ namespace NumericalAnalysis
 			}
 
 			for (int i = 0; i < y.GetLength(0); i++)
-				using (var file = new System.IO.StreamWriter("data" + i))
+				using (var file = new StreamWriter("data" + i))
 					for (int j = 0; j < xx.Length; j++)
 						file.WriteLine("{0,-10} {1}", xx[j], y[i][j]);
 
 			Start();
 		}
 
+		#region Run() overloadings
 		public static void Run(double[] x, double[] xx,
 			string title, string arrayName, params double[][] y)
-			=> Run(x, xx, "", x, title, arrayName, y);
+		{
+			Run(x, xx, "", x, title, arrayName, y);
+		}
 
 		public static void Run(double[] x, double[] xx, string functions,
 			string title, string arrayName, params double[][] y)
-			=> Run(x, xx, functions, x, title, arrayName, y);
+		{
+			Run(x, xx, functions, x, title, arrayName, y);
+		}
+		#endregion
 
 		public static void Start()
 		{
+			if (!exist)
+				return;
+
+			if (!File.Exists(path))
+			{
+				System.Windows.Forms.MessageBox.Show(path + " was not found");
+				exist = false;
+				return;
+			}
+
 			var cmd = new System.Diagnostics.Process();
 			//cmd.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			cmd.StartInfo.FileName = "cmd.exe";
@@ -91,9 +110,7 @@ namespace NumericalAnalysis
 			cmd.StartInfo.CreateNoWindow = true;
 			cmd.StartInfo.UseShellExecute = false;
 			cmd.Start();
-			cmd.StandardInput.WriteLine(
-				@"""C:\Program Files (x86)\gnuplot\bin\gnuplot.exe""" +
-				@" -persist gnuplotRun.txt");
+			cmd.StandardInput.WriteLine('"' + path + "\" -persist " + script);
 			cmd.StandardInput.Flush();
 			cmd.StandardInput.Close();
 			cmd.WaitForExit();
@@ -101,9 +118,15 @@ namespace NumericalAnalysis
 			//System.Console.WriteLine(cmd.StandardOutput.ReadToEnd());
 		}
 
-		static W S;
-		static readonly styles style = styles.points;
-		enum styles { dots, impulses, lines, points, steps };
-		delegate void W(string s, params object[] args);
+		const string script = "gnuplotRun.txt";
+		const string src = @"%ProgramFiles(x86)%\gnuplot\bin\gnuplot.exe";
+		static string path = Environment.ExpandEnvironmentVariables(src);
+		static bool exist = true;
+
+		static readonly Styles style = Styles.points;
+		enum Styles { dots, impulses, lines, points, steps };
+
+		static Writer S;
+		delegate void Writer(string s, params object[] args);
 	}
 }

@@ -1,5 +1,6 @@
 ﻿#define table
 
+using System;
 using System.Linq;
 using static System.Console;
 using static System.Math;
@@ -21,7 +22,7 @@ namespace NumericalAnalysis
 		{
 			do
 				Start();
-			while (ReadKey().Key != System.ConsoleKey.F4);
+			while (ReadKey().Key != ConsoleKey.Q);
 		}
 
 		static void Start()
@@ -103,12 +104,12 @@ namespace NumericalAnalysis
 				for (int j = 1; j < p.GetLength(1); j++)
 				{
 					if (optimal[i, j])
-						ForegroundColor = System.ConsoleColor.Green;
+						ForegroundColor = ConsoleColor.Green;
 
 					string s = Ceiling(-Log(p[i, j], 10)).ToString();
 					Write("{0,-3} ", (s == "Infinity") ? "inf" : s);
 
-					ForegroundColor = System.ConsoleColor.Gray;
+					ForegroundColor = ConsoleColor.Gray;
 				}
 				WriteLine();
 			}
@@ -221,7 +222,7 @@ namespace NumericalAnalysis
 
 		static bool[,] optimal;
 		delegate double F(long i);
-		static AF f = Functions.Get(2);
+		static AFunc f = Functions.Get(2);
 		static string[] name = { "f11", "f12", "b11", "b12", "c21", "c22" };
 		static int[] row = new int[name.Length];
 		static double[,] p = new double[tableHeight, name.Length + 1];

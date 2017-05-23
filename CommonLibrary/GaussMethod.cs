@@ -123,5 +123,5 @@
 		public delegate double B(int i);
 	}
 }
-
+// code source
 // http://www.cyberforum.ru/csharp-beginners/thread510942.html

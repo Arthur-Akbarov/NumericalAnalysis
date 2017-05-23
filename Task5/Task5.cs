@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using static System.Console;
 using static System.Math;
 
@@ -10,7 +11,7 @@ namespace NumericalAnalysis
 		{
 			do
 				Start();
-			while (ReadKey().Key != System.ConsoleKey.F4);
+			while (ReadKey().Key != ConsoleKey.Q);
 		}
 
 		static void Start()
@@ -39,7 +40,7 @@ namespace NumericalAnalysis
 			Clear();
 			WriteLine("f(x) = {0}\n", f);
 			WriteLine("exact value of integral from {0} to {1}", a, b);
-			WriteLine(exact.Formatted(-t));
+			WriteLine(exact.ToString(-t));
 			WriteLine();
 			Write("{0,-" + (t + 3) + "}", "nvalue");
 			Write("{0,-" + (t + 5) + "}", "error");
@@ -50,10 +51,10 @@ namespace NumericalAnalysis
 		static void Output(double nvalue, double error, char s, double bound,
 			string methodName)
 		{
-			Write("{0}   ", nvalue.Formatted(-t));
-			Write("{0}  ", error.Formatted(-t));
+			Write("{0}   ", nvalue.ToString(-t));
+			Write("{0}  ", error.ToString(-t));
 			Write("{0}  ", s);
-			Write("{0}   ", bound.Formatted(-t));
+			Write("{0}   ", bound.ToString(-t));
 			Write("{0}", methodName);
 			WriteLine();
 		}
@@ -119,7 +120,7 @@ namespace NumericalAnalysis
 		const int t = 13;
 		static double[] y;
 		const double a = 0, b = 1;
-		static AF f = Functions.GetIntegrableFunc();
+		static AFunc f = Functions.GetIntegrableFunc();
 		static double exact = Functions.Integrate(a, b);
 		static readonly List<Quadrature> quadratures = new List<Quadrature>() {
 		 LeftRectangle, RightRectangle, CentralRectangle, Trapezoid, Simpson };

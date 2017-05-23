@@ -1,16 +1,17 @@
-﻿using static System.String;
-using static System.Math;
+﻿using static System.Math;
+using static System.String;
 
 namespace NumericalAnalysis
 {
 	public static class Worker
 	{
-		public static string Formatted(this double number, int length)
+		// should rewrite
+		public static string ToString(this double d, int maxLength)
 		{
-			string str = Format("{0:N" + Abs(length) + "}", number);
+			string str = Format("{0:N" + Abs(maxLength) + "}", d);
 
-			if (str.Length > Abs(length))
-				str = str.Substring(0, Abs(length));
+			if (str.Length > Abs(maxLength))
+				str = str.Substring(0, Abs(maxLength));
 
 			if (str.Contains("."))
 			{
@@ -20,9 +21,9 @@ namespace NumericalAnalysis
 					str.Remove(str.Length - 1);
 			}
 
-			return (length > 0)
-				? str.TrimEnd('.').PadLeft(length)
-				: str.TrimEnd('.').PadRight(-length);
+			return (maxLength > 0)
+				? str.TrimEnd('.').PadLeft(maxLength)
+				: str.TrimEnd('.').PadRight(-maxLength);
 		}
 		public static int Factorial(int n)
 		{

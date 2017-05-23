@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace NumericalAnalysis
 {
-	public class Func : AF
+	public class Func : AFunc
 	{
 		// guarantee every key is not empty
 		public Dictionary<SimpleF, Dictionary<int, double>> D;
@@ -44,7 +44,7 @@ namespace NumericalAnalysis
 
 			return result;
 		}
-		public override AF GetDer(int n = 1)
+		public override AFunc GetADer(int n = 1)
 		{
 			var result = new Func();
 
@@ -169,7 +169,7 @@ namespace NumericalAnalysis
 		}
 		//public static Func operator *(Func f, Func g)
 		//{
-		//	// should use matrix a or mb smth more sophisticated
+		//	// should use matrix a or smth more sophisticated
 		//}
 
 		public override string ToString()

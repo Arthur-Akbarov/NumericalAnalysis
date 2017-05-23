@@ -1,6 +1,6 @@
 ﻿using System;
-using static System.Math;
 using static System.Console;
+using static System.Math;
 using static System.String;
 
 namespace NumericalAnalysis
@@ -20,7 +20,7 @@ namespace NumericalAnalysis
 
 				WriteLine("Error: {0:E2}\n", Start(n, X));
 			}
-			while (ReadKey().Key != ConsoleKey.F4);
+			while (ReadKey().Key != ConsoleKey.Q);
 		}
 
 		static double Start(int n, double X, int idFunc = 0, int m = 100)
@@ -30,7 +30,7 @@ namespace NumericalAnalysis
 			for (int i = 0; i < m + 1; i++)
 				x[i] = Round(x0 + h * i, 15);
 
-			AF f = Functions.Get(idFunc);
+			AFunc f = Functions.Get(idFunc);
 
 			double d = (X - x[0]) / h;
 			int start = (int)Truncate(d);
@@ -166,33 +166,34 @@ namespace NumericalAnalysis
 
 		static double[] GetZ(Method method, double[] x, int n, int start)
 		{
+			int size = sizeof(double);
 			int m = x.Length - 1;
 			n = Min(m, n);
 			double[] z = new double[n + 1];
 
 			if (method == Forward)
-				Buffer.BlockCopy(x, 0, z, 0, (n + 1) * sizeof(double));
+				Buffer.BlockCopy(x, 0, z, 0, (n + 1) * size);
 			else
 			if (method == Backward)
-				Buffer.BlockCopy(x, (m - n) * sizeof(double),
-							  z, 0, (n + 1) * sizeof(double));
+				Buffer.BlockCopy(x, (m - n) * size, z, 0, (n + 1) * size);
 			else
 			if (method == MiddleUp)
 			{
 				n = Min(Min(2 * start + 1, 2 * (m - start)), n);
 
 				Array.Resize(ref z, n + 1);
-				Buffer.BlockCopy(x, (start - n / 2) * sizeof(double),
-									  z, 0, (n + 1) * sizeof(double));
+				Buffer.BlockCopy(x, (start - n / 2) * size,
+									  z, 0, (n + 1) * size);
 			}
 			else // MiddleDown
 			{
 				n = Min(Min(2 * start, 2 * (m - start) + 1), n);
 
 				Array.Resize(ref z, n + 1);
-				Buffer.BlockCopy(x, (start - (n + 1) / 2) * sizeof(double),
-											z, 0, (n + 1) * sizeof(double));
+				Buffer.BlockCopy(x, (start - (n + 1) / 2) * size,
+											z, 0, (n + 1) * size);
 			}
+
 			return z;
 		}
 		static double FiniteDiff(double[] y, int start, int order)
@@ -203,7 +204,7 @@ namespace NumericalAnalysis
 					- FiniteDiff(y, start, order - 1);
 		}
 
-		static void Plot(AF f, AF p, AF errorF, double[] x,
+		static void Plot(AFunc f, AFunc p, AFunc errorF, double[] x,
 			string methodName, double X, double error)
 		{
 			double[] xx = Worker.GetX(x);

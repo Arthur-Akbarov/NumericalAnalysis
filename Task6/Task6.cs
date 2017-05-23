@@ -37,7 +37,7 @@ namespace NumericalAnalysis
 			WriteLine(new string('*', 3 * t + 18));
 			WriteLine("f(x) = {0}\n", f);
 			WriteLine("exact value of integral from {0} to {1}", a, b);
-			WriteLine(exact.Formatted(-t));
+			WriteLine(exact.ToString(-t));
 			WriteLine();
 			//WriteLine(new string(' ', t + 3) + "error");
 			Write("{0,-" + (t + 3) + "}", "nvalue");
@@ -114,11 +114,11 @@ namespace NumericalAnalysis
 		static void Output(double nvalue, double error, char s, double bound,
 			string methodName)
 		{
-			Write("{0}   ", nvalue.Formatted(-t));
+			Write("{0}   ", nvalue.ToString(-t));
 			//Write("{0,-7}", Ceiling(-Log(Abs(Abs(exact - nvalue)), 10)));
-			Write("{0}  ", error.Formatted(-t));
+			Write("{0}  ", error.ToString(-t));
 			Write("{0}  ", s);
-			Write("{0}   ", bound.Formatted(-t));
+			Write("{0}   ", bound.ToString(-t));
 			Write("{0}", methodName);
 			WriteLine();
 		}
@@ -157,7 +157,7 @@ namespace NumericalAnalysis
 			WriteLine(new string('*', 3 * t + 18));
 			WriteLine("f(x) = {0}\n", f);
 			WriteLine("exact value of integral from {0} to {1}", a, b);
-			WriteLine(exact2.Formatted(-t));
+			WriteLine(exact2.ToString(-t));
 			WriteLine();
 			Write("{0,-" + (t + 3) + "}", "nvalue");
 			Write("{0,-" + (t + 3) + "}", "error");
@@ -200,8 +200,8 @@ namespace NumericalAnalysis
 		static void Output(F f, double[] A, double[] x, string methodName)
 		{
 			double nvalue = QuadratureEval(f, A, x);
-			Write("{0}   ", nvalue.Formatted(-t));
-			Write("{0}   ", Abs(nvalue - exact2).Formatted(-t));
+			Write("{0}   ", nvalue.ToString(-t));
+			Write("{0}   ", Abs(nvalue - exact2).ToString(-t));
 			Write("{0}", methodName);
 			WriteLine();
 		}
@@ -219,7 +219,7 @@ namespace NumericalAnalysis
 		const double a = 0, b = 1;
 		delegate double G(int i);
 		delegate double F(double x);
-		static AF f = Functions.GetIntegrableFunc();
+		static AFunc f = Functions.GetIntegrableFunc();
 		const double exact2 = 0.5284080848967414;
 		static readonly List<Quadrature5> quadratures5 =
 			new List<Quadrature5>() { Gauss, Simpson };

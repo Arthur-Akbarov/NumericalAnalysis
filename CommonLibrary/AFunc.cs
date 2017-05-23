@@ -2,13 +2,13 @@
 
 namespace NumericalAnalysis
 {
-	public abstract class AF
+	public abstract class AFunc
 	{
 		public abstract double Eval(double x);
 		public abstract double Der(int n, double x);
-		public abstract AF GetDer(int n = 1);
+		public abstract AFunc GetADer(int n = 1);
 
-		public static AF operator +(AF f, AF g)
+		public static AFunc operator +(AFunc f, AFunc g)
 		{
 			if (f is Polynomial && g is Polynomial)
 				return (Polynomial)f + (Polynomial)g;
@@ -21,7 +21,7 @@ namespace NumericalAnalysis
 
 			return (Func)f + (Func)g;
 		}
-		public static AF operator -(AF f, AF g)
+		public static AFunc operator -(AFunc f, AFunc g)
 		{
 			if (f is Polynomial && g is Polynomial)
 				return (Polynomial)f - (Polynomial)g;
@@ -55,7 +55,7 @@ namespace NumericalAnalysis
 		{
 			double result = Max(Abs(Der(n, a)), Abs(Der(n, b)));
 
-			double[] stationary = GetDer(n + 1).GetRoots(a, b);
+			double[] stationary = GetADer(n + 1).GetRoots(a, b);
 
 			foreach (var point in stationary)
 				result = Max(result, Abs(Der(n, point)));
@@ -82,7 +82,7 @@ namespace NumericalAnalysis
 		}
 		public double Tangent(double a, double b)
 		{
-			double e = 1E-15;
+			double e = 1e-15;
 			a = Eval(a) * Der(2, a) > 0 ? a : b;
 			b = Eval(a) / Der(1, a);
 			int step = 1;

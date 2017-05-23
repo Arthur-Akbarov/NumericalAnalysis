@@ -38,7 +38,7 @@ namespace NumericalAnalysis
 
 			return z;
 		}
-		static double[][] TableDividedDiff(AF f, double[] z)
+		static double[][] TableDividedDiff(AFunc f, double[] z)
 		{
 			int N = z.Length;
 
@@ -93,7 +93,7 @@ namespace NumericalAnalysis
 		}
 		static void Start(params double[] k) => Start(0, k);
 
-		static void Plot(AF f, AF p, AF errorF, double[] x, int[] r)
+		static void Plot(AFunc f, AFunc p, AFunc errorF, double[] x, int[] r)
 		{
 			double[] xx = Worker.GetX(x);
 			double[] y0 = (f - p).AbsEvaluate(xx);
@@ -110,10 +110,10 @@ namespace NumericalAnalysis
 
 			Gnuplot.Run(x, xx, functions, title, "x", y0, y1);
 		}
-		static void Plot(AF f, AF p, double[] x, int[] r, int k)
+		static void Plot(AFunc f, AFunc p, double[] x, int[] r, int k)
 		{
-			AF fk = f.GetDer(k);
-			AF pk = p.GetDer(k);
+			AFunc fk = f.GetADer(k);
+			AFunc pk = p.GetADer(k);
 
 			double[] xx = Worker.GetX(x);
 			double[] y0 = (fk - pk).AbsEvaluate(xx);
@@ -129,7 +129,5 @@ namespace NumericalAnalysis
 
 			Gnuplot.Run(x, xx, functions, title, "x", y0);
 		}
-
-		delegate void S(string s, params object[] args);
 	}
 }

@@ -1,16 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using static System.Console;
 using static System.Math;
 
 namespace NumericalAnalysis
 {
+	// fail to -1 1 1
 	class Task7
 	{
 		static void Main(string[] args)
 		{
 			do
 				Start();
-			while (ReadKey().Key != System.ConsoleKey.F4);
+			while (ReadKey().Key != ConsoleKey.Q);
 		}
 
 		static void Start()
@@ -155,7 +157,7 @@ namespace NumericalAnalysis
 
 		static double a, b, e;
 		const int stepMax = 99;
-		static AF f = Functions.Get2();
+		static AFunc f = Functions.Get2();
 		static readonly List<FindRoot> findRoots = new List<FindRoot> {
 			Bisection, Newton, ModifiedNewton, Secant, FixedPointIteration };
 	}

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using static System.Console;
 
 namespace NumericalAnalysis
@@ -12,6 +13,7 @@ namespace NumericalAnalysis
 		{
 			int n = 0;
 			bool got = false;
+
 			while (!got)
 			{
 				Write(s);
@@ -22,7 +24,7 @@ namespace NumericalAnalysis
 				}
 				catch { WriteLine("Integer expression expected!"); }
 			}
-			
+
 			return n;
 		}
 		/// <param name="s">приветственная строка</param>
@@ -32,11 +34,13 @@ namespace NumericalAnalysis
 		{
 			double x = 0;
 			bool got = false;
+
 			while (!got)
 			{
 				Write(s);
 				try
 				{
+
 					x = double.Parse(ReadLine());
 					got = IsSatisfy(x, min, max);
 				}
@@ -46,34 +50,34 @@ namespace NumericalAnalysis
 			return x;
 		}
 
-		static bool IsSatisfy(dynamic a, dynamic min, dynamic max)
+		static bool IsSatisfy<T>(T a, T min, T max)
+			where T : IComparable
 		{
-			if (min <= a && a <= max)
+			if (a.CompareTo(min) >= 0 && a.CompareTo(max) <= 0)
 				return true;
 
-			if (min == a.GetType().GetField("MinValue").GetValue(null))
+			if (min.Equals(minValue[typeof(T)]))
 				WriteLine("{0} isn't <= {1}", a, max);
 			else
-			if (max == a.GetType().GetField("MaxValue").GetValue(null))
+			if (max.Equals(maxValue[typeof(T)]))
 				WriteLine("{0} isn't >= {1}", a, min);
 			else
 				WriteLine("{0} doesn't belong to [{1},{2}]", a, min, max);
 
 			return false;
 		}
-		internal class MaxValueCache
-		{
-			private static readonly Dictionary<System.Type, object> maxValues =
-				new Dictionary<System.Type, object>()
-			{
-				{ typeof(int), int.MaxValue},
-				{ typeof(double), double.MaxValue}
-			};
 
-			public static object MaxValue(System.Type type)
+		static readonly Dictionary<Type, object> maxValue =
+			new Dictionary<Type, object>()
 			{
-				return maxValues[type];
-			}
-		}
+				{ typeof(int), int.MaxValue },
+				{ typeof(double), double.MaxValue }
+			};
+		static readonly Dictionary<Type, object> minValue =
+			new Dictionary<Type, object>()
+			{
+				{ typeof(int), int.MinValue },
+				{ typeof(double), double.MinValue }
+			};
 	}
 }

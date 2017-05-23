@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NumericalAnalysis</RootNamespace>
     <AssemblyName>Task6</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -44,10 +44,6 @@
     <ProjectReference Include="..\CommonLibrary\CommonLibrary.csproj">
       <Project>{d56d9628-0198-49ff-a2fb-a3cf315cbe7d}</Project>
       <Name>CommonLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Task5\Task5.csproj">
-      <Project>{c4711217-c832-4af0-b218-9d97af680498}</Project>
-      <Name>Task5</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

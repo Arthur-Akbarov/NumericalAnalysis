@@ -1,20 +1,21 @@
-﻿using static System.Math;
+﻿using System;
+using static System.Math;
 
 namespace NumericalAnalysis
 {
 	public class Functions
 	{
-		const double c = 5;
 		const int N = 16;
+		const double c = 5;
 
-		public static AF Get(int n)
+		public static AFunc Get(int n)
 		{
 			return (n == 0) ? Get0()
 				 : (n == 1) ? Get1()
 				 : (n == 2) ? Get2()
 				 : Get3();
 		}
-		public static AF Get0()
+		public static AFunc Get0()
 		{
 			const double N2 = N % 2 + 1;
 			const double N7 = (N % 7 + 1) / 2d;
@@ -47,7 +48,7 @@ namespace NumericalAnalysis
 				name: Name(f)
 			));
 		}
-		public static AF Get1()
+		public static AFunc Get1()
 		{
 			return new Func(new SimpleF(
 				eval: (k, x) =>
@@ -70,7 +71,7 @@ namespace NumericalAnalysis
 				name: Name("x/2 + sin(x)^2")
 			));
 		}
-		public static AF Get2()
+		public static AFunc Get2()
 		{
 			return new Func(new SimpleF(
 				eval: (k, x) =>
@@ -91,7 +92,7 @@ namespace NumericalAnalysis
 				name: Name("3*x - cos(x) - 1")
 			));
 		}
-		public static AF Get3()
+		public static AFunc Get3()
 		{
 			return new Func(new SimpleF(
 				eval: (k, x) => Exp(x),
@@ -128,7 +129,7 @@ namespace NumericalAnalysis
 			r[2] = 3;
 		}
 
-		public static AF GetIntegrableFunc()
+		public static AFunc GetIntegrableFunc()
 		{
 			return new Func(new SimpleF(
 			eval: (k, x) =>
@@ -160,7 +161,7 @@ namespace NumericalAnalysis
 		}
 		public static double Integrate(double a, double b)
 		{
-			F f = (x) => Atan(x / Sqrt(c)) / Sqrt(c);
+			Func<double, double> f = (x) => Atan(x / Sqrt(c)) / Sqrt(c);
 
 			return (a == 0) ? f(b) : f(b) - f(a);
 		}
@@ -185,7 +186,6 @@ namespace NumericalAnalysis
 			return (k <= 3) ? new string('\'', k) : "'[" + k + "]";
 		}
 
-		delegate double F(double x);
 		enum Sign { Positive, Negative };
 	}
 }

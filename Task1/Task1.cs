@@ -17,7 +17,7 @@ namespace NumericalAnalysis
 			if (x.Length == 0)
 				x = Functions.InitializeX();
 
-			AF f = Functions.Get(idFunc);
+			AFunc f = Functions.Get(idFunc);
 			double[] y = f.Evaluate(x);
 
 			Polynomial p = method(x, y);
@@ -38,7 +38,7 @@ namespace NumericalAnalysis
 		}
 
 		public delegate Polynomial Method(double[] x, double[] y);
-		static Polynomial Lagrange(double[] x, double[] y)
+		public static Polynomial Lagrange(double[] x, double[] y)
 		{
 			var result = new Polynomial();
 
@@ -55,7 +55,7 @@ namespace NumericalAnalysis
 
 			return result;
 		}
-		static Polynomial Newton(double[] x, double[] y)
+		public static Polynomial Newton(double[] x, double[] y)
 		{
 			var result = new Polynomial();
 
@@ -72,7 +72,7 @@ namespace NumericalAnalysis
 			return result;
 		}
 
-		public static Polynomial ErrorEstimate(AF f, double[] x)
+		public static Polynomial ErrorEstimate(AFunc f, double[] x)
 		{
 			int n = x.Length - 1;
 			Polynomial w = new Polynomial(1);
@@ -84,7 +84,7 @@ namespace NumericalAnalysis
 
 			return w * M;
 		}
-		static double ErrorBound(AF f, double[] x)
+		static double ErrorBound(AFunc f, double[] x)
 		{
 			int n = x.Length - 1;
 			double result = 2;
@@ -149,7 +149,8 @@ namespace NumericalAnalysis
 		}
 		#endregion
 
-		static void Plot(AF f, AF p, AF errorF, double[] x, string methodName)
+		static void Plot(AFunc f, AFunc p, AFunc errorF, double[] x,
+			string methodName)
 		{
 			double[] xx = Worker.GetX(x);
 			double[] y0 = (f - p).AbsEvaluate(xx);
@@ -166,8 +167,8 @@ namespace NumericalAnalysis
 
 			Gnuplot.Run(x, xx, functions, title, "x", y0, y1);
 		}
-		static void Plot(AF f, AF p, AF errorF, double errorBound, double[] t,
-			double[] x, string methodName)
+		static void Plot(AFunc f, AFunc p, AFunc errorF, double errorBound,
+			double[] t, double[] x, string methodName)
 		{
 			double[] xx = Worker.GetX(x);
 			double[] y0 = (f - p).AbsEvaluate(xx);

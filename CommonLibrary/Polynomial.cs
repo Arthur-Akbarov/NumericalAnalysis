@@ -2,9 +2,10 @@
 
 namespace NumericalAnalysis
 {
-	public class Polynomial : AF
+	public class Polynomial : AFunc
 	{
-		public const int maxDegree = 20;
+		public const double eps = 1e-10;
+		public const int maxDegree = 40;
 		/// <summary>
 		/// coefficients of polynomial ( a0, a1, a2 ... )
 		/// </summary>
@@ -88,13 +89,24 @@ namespace NumericalAnalysis
 
 			return p;
 		}
+		public static Polynomial operator ^(Polynomial p, int n)
+		{
+			if (n < 1)
+				p = new Polynomial();
+			else
+			{
+				var t = p.Clone();
+
+				for (int i = 0; i < n - 1; i++)
+					p *= t;
+			}
+
+			return p;
+		}
 
 		public Polynomial Clone()
 		{
-			var result = new Polynomial();
-			System.Buffer.BlockCopy(a, 0, result.a, 0,
-							 a.Length * sizeof(double));
-			return result;
+			return new Polynomial(a);
 		}
 		public static implicit operator SimpleF(Polynomial p)
 		{
@@ -102,7 +114,7 @@ namespace NumericalAnalysis
 
 			return new SimpleF(
 				eval: (k, a) => r.Der(k, a),
-				name: Functions.Name(r.GetDer().ToString())
+				name: Functions.Name(r.GetADer().ToString())
 			);
 		}
 
@@ -155,7 +167,11 @@ namespace NumericalAnalysis
 
 			return result;
 		}
-		public override AF GetDer(int k = 1)
+		public override AFunc GetADer(int k = 1)
+		{
+			return GetDer(k);
+		}
+		public Polynomial GetDer(int k = 1)
 		{
 			var result = new Polynomial();
 			int d = Deg;
@@ -177,23 +193,27 @@ namespace NumericalAnalysis
 			if (d == -1)
 				return "0";
 
-			var s = new System.Text.StringBuilder();
-			for (int i = d; i > 1; i--)
-				if (a[i] != 0)
-				{
-					s.Append(a[i].Signed() + "x^");
+			var sb = new System.Text.StringBuilder();
 
-					s = (i >= 10) ? s.Append("{" + i + "}")
-								  : s.Append(i);
+			for (int i = d; i > 1; i--)
+				if (Abs(a[i]) > eps)
+				{
+					sb.Append(a[i].Signed() + "x^");
+
+					sb = (i >= 10) ? sb.Append("{" + i + "}")
+								   : sb.Append(i);
 				}
 
-			s.Append(a[1].Signed() + "x");
-			s.Append(a[0].Signed());
+			if (Abs(a[1]) > eps)
+				sb.Append(a[1].Signed() + "x");
 
-			s.Replace(" 1x", " x");
-			Worker.BeautifyLeadingSign(s);
+			if (Abs(a[0]) > eps)
+				sb.Append(a[0].Signed());
 
-			return s.ToString();
+			sb.Replace(" 1x", " x");
+			Worker.BeautifyLeadingSign(sb);
+
+			return sb.ToString();
 		}
 	}
 }
